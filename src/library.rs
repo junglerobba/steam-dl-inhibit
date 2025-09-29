@@ -1,6 +1,6 @@
 use serde::Deserialize;
 use std::{
-    env::home_dir,
+    env::{self, home_dir},
     fs::{self},
     path::PathBuf,
 };
@@ -24,7 +24,15 @@ struct Libraryfolder {
 
 pub fn get_library_paths() -> Option<Vec<PathBuf>> {
     let home = home_dir()?;
-    let libraryfolders = DEFAULT_LIBRARY_PATHS
+    let librarypath = env::var("STEAM_DIR")
+        .map(|str| vec![str])
+        .unwrap_or_else(|_| {
+            DEFAULT_LIBRARY_PATHS
+                .iter()
+                .map(|str| str.to_string())
+                .collect::<Vec<_>>()
+        });
+    let libraryfolders = librarypath
         .iter()
         .map(|path| home.join(path))
         .map(|path| path.join(VDF_PATH))
