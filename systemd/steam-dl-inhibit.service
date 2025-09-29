@@ -1,0 +1,9 @@
+[Unit]
+After=graphical-session.target
+Description=Inhibit suspend during steam downloads
+
+[Service]
+ExecStart=@@exe@@
+
+[Install]
+WantedBy=graphical-session.target

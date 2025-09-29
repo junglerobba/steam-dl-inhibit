@@ -20,5 +20,13 @@ rustPlatform.buildRustPackage {
     pkg-config
   ];
 
+  postInstall = ''
+    mkdir -p $out/lib/systemd/user
+    cp ${./systemd/steam-dl-inhibit.service} $out/lib/systemd/user/steam-dl-inhibit.service
+
+    substituteInPlace $out/lib/systemd/user/steam-dl-inhibit.service \
+      --replace-fail @@exe@@ $out/bin/steam-dl-inhibit
+  '';
+
   meta.mainProgram = "steam-dl-inhibit";
 }
